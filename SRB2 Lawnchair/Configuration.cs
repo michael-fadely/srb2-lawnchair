@@ -6,40 +6,32 @@ namespace Lawnchair
 {
 	public class LawnchairSettings
 	{
-		public LawnchairSettings()
-		{
-			Launcher = new LauncherSettings();
-			Game = new GameArguments();
-			Join = new NetplayJoin();
-			Host = new NetplayHost();
-			Filters = new FilterSettings();
-		}
-
 		[IniAlwaysInclude]
 		[IniName("Launcher Options")]
-		public LauncherSettings Launcher;
+		public readonly LauncherSettings Launcher = new LauncherSettings();
 
 		[IniAlwaysInclude]
 		[IniName("Game Arguments")]
-		public GameArguments Game;
+		public readonly GameArguments Game = new GameArguments();
 
 		[IniAlwaysInclude]
 		[IniName("Join Arguments")]
-		public NetplayJoin Join;
+		public readonly NetplayJoin Join = new NetplayJoin();
 
 		[IniAlwaysInclude]
 		[IniName("Host Arguments")]
-		public NetplayHost Host;
+		public readonly NetplayHost Host = new NetplayHost();
 
 		[IniAlwaysInclude]
 		[IniName("Drag Drop Filters")]
-		public FilterSettings Filters;
+		public readonly FilterSettings Filters = new FilterSettings();
 	}
 
 	public class LauncherSettings
 	{
 		[IniAlwaysInclude]
 		public SRB2Version GameVersion;
+
 		[IniAlwaysInclude]
 		[DefaultValue(true)]
 		public bool MinimizeOnLaunch;
