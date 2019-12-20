@@ -124,7 +124,7 @@ namespace IniFile
 				foreach (IniNameValue value in group.Value)
 				{
 					string escapedkey = value.Key.Replace(@"\", @"\\").Replace("=", @"\=").Replace("\n", @"\n").Replace("\r", @"\r").Replace(";", @"\;");
-					if (escapedkey.StartsWith("["))
+					if (escapedkey.StartsWith("[", StringComparison.Ordinal))
 						escapedkey = escapedkey.Insert(0, @"\");
 					result.Add(escapedkey + "=" + value.Value.Replace(@"\", @"\\").Replace("\n", @"\n").Replace("\r", @"\r").Replace(";", @"\;"));
 				}

@@ -6,12 +6,12 @@ namespace Lawnchair.Forms
 {
 	public partial class NewDragDropFilter : Form
 	{
-		public readonly List<string> extensions;
+		public readonly List<string> Extensions;
 
 		public NewDragDropFilter()
 		{
 			InitializeComponent();
-			extensions = new List<string>();
+			Extensions = new List<string>();
 		}
 
 		private void buttonOK_Click(object sender, EventArgs e)
@@ -20,10 +20,14 @@ namespace Lawnchair.Forms
 
 			foreach (string s in newFilters)
 			{
-				if (!s.StartsWith("."))
-					extensions.Add("." + s);
+				if (!s.StartsWith(".", StringComparison.Ordinal))
+				{
+					Extensions.Add("." + s);
+				}
 				else
-					extensions.Add(s);
+				{
+					Extensions.Add(s);
+				}
 			}
 
 			DialogResult = DialogResult.OK;
@@ -32,7 +36,7 @@ namespace Lawnchair.Forms
 
 		private void NewDragDropFilter_Shown(object sender, EventArgs e)
 		{
-			extensions.Clear();
+			Extensions.Clear();
 			textBox.Clear();
 			textBox.Select();
 		}

@@ -351,7 +351,7 @@ namespace Lawnchair.Forms
         "ed this if you\'re connecting to your own\r\ndedicated server. If so, change it to " +
         "5030.");
 			this.textJoinPortNum.TextChanged += new System.EventHandler(this.onTextChanged_textPortNum);
-			this.textJoinPortNum.Enter += new System.EventHandler(this.textGainFocus);
+			this.textJoinPortNum.Enter += new System.EventHandler(this.TextGainFocus);
 			// 
 			// label7
 			// 
@@ -373,7 +373,7 @@ namespace Lawnchair.Forms
 			this.textJoinIPAddress.TabIndex = 0;
 			this.textJoinIPAddress.Text = "127.0.0.1";
 			this.toolTip.SetToolTip(this.textJoinIPAddress, "Defines the IP address to connect to.");
-			this.textJoinIPAddress.Enter += new System.EventHandler(this.textGainFocus);
+			this.textJoinIPAddress.Enter += new System.EventHandler(this.TextGainFocus);
 			// 
 			// label9
 			// 
@@ -613,9 +613,9 @@ namespace Lawnchair.Forms
 			this.textHostMapNum.TabIndex = 5;
 			this.textHostMapNum.Text = "01";
 			this.toolTip.SetToolTip(this.textHostMapNum, "Specifies which map to warp to on startup.\r\n");
-			this.textHostMapNum.Click += new System.EventHandler(this.textGainFocus);
+			this.textHostMapNum.Click += new System.EventHandler(this.TextGainFocus);
 			this.textHostMapNum.TextChanged += new System.EventHandler(this.onTextChanged_textHostMapNum);
-			this.textHostMapNum.Enter += new System.EventHandler(this.textGainFocus);
+			this.textHostMapNum.Enter += new System.EventHandler(this.TextGainFocus);
 			// 
 			// comboHostGametype
 			// 
@@ -669,7 +669,7 @@ namespace Lawnchair.Forms
 			this.toolTip.SetToolTip(this.textHostPass, "Defines an administrator password. Useful for dedicated servers.\r\nLogging in with" +
         " it grants you administrator.\r\nMaximum length is 8 characters. Leave blank and n" +
         "o pass will be set.");
-			this.textHostPass.Enter += new System.EventHandler(this.textGainFocus);
+			this.textHostPass.Enter += new System.EventHandler(this.TextGainFocus);
 			// 
 			// label1
 			// 
@@ -743,9 +743,9 @@ namespace Lawnchair.Forms
 			this.textScreenHeight.TabIndex = 3;
 			this.textScreenHeight.Text = "400";
 			this.toolTip.SetToolTip(this.textScreenHeight, "Defines the screen height.");
-			this.textScreenHeight.Click += new System.EventHandler(this.textGainFocus);
+			this.textScreenHeight.Click += new System.EventHandler(this.TextGainFocus);
 			this.textScreenHeight.TextChanged += new System.EventHandler(this.onTextChanged_textScreenHeight);
-			this.textScreenHeight.Enter += new System.EventHandler(this.textGainFocus);
+			this.textScreenHeight.Enter += new System.EventHandler(this.TextGainFocus);
 			// 
 			// checkCustomResolution
 			// 
@@ -769,9 +769,9 @@ namespace Lawnchair.Forms
 			this.textScreenWidth.TabIndex = 2;
 			this.textScreenWidth.Text = "640";
 			this.toolTip.SetToolTip(this.textScreenWidth, "Defines the screen width.");
-			this.textScreenWidth.Click += new System.EventHandler(this.textGainFocus);
+			this.textScreenWidth.Click += new System.EventHandler(this.TextGainFocus);
 			this.textScreenWidth.TextChanged += new System.EventHandler(this.winWidth_TextChanged);
-			this.textScreenWidth.Enter += new System.EventHandler(this.textGainFocus);
+			this.textScreenWidth.Enter += new System.EventHandler(this.TextGainFocus);
 			// 
 			// checkWindowedMode
 			// 
@@ -1058,9 +1058,9 @@ namespace Lawnchair.Forms
 			this.textWarpMapNum.TabIndex = 1;
 			this.textWarpMapNum.Text = "01";
 			this.toolTip.SetToolTip(this.textWarpMapNum, "Specifies which map to warp to on startup.\r\n");
-			this.textWarpMapNum.Click += new System.EventHandler(this.textGainFocus);
+			this.textWarpMapNum.Click += new System.EventHandler(this.TextGainFocus);
 			this.textWarpMapNum.TextChanged += new System.EventHandler(this.onTextChanged_textWarpMapNum);
-			this.textWarpMapNum.Enter += new System.EventHandler(this.textGainFocus);
+			this.textWarpMapNum.Enter += new System.EventHandler(this.TextGainFocus);
 			// 
 			// comboWarpGametype
 			// 
@@ -1246,6 +1246,7 @@ namespace Lawnchair.Forms
 			this.Name = "MainWindow";
 			this.Text = "Title";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
+			this.Load += new System.EventHandler(this.MainWindow_Load);
 			this.tabControlMain.ResumeLayout(false);
 			this.tabPageFiles.ResumeLayout(false);
 			this.tabPageNetplay.ResumeLayout(false);

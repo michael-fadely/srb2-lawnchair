@@ -16,14 +16,14 @@ namespace IniFile
 		private static readonly IniCollectionSettings defaultCollectionSettings = new IniCollectionSettings(IniCollectionMode.Normal);
 
 
-		public static void Serialize(object Object, string Filename)
+		public static void Serialize(object Object, string filename)
 		{
-			IniFile.Save(Serialize(Object), Filename);
+			IniFile.Save(Serialize(Object), filename);
 		}
 
-		public static void Serialize(object Object, IniCollectionSettings CollectionSettings, string Filename)
+		public static void Serialize(object Object, IniCollectionSettings collectionSettings, string filename)
 		{
-			IniFile.Save(Serialize(Object, CollectionSettings), Filename);
+			IniFile.Save(Serialize(Object, collectionSettings), filename);
 		}
 
 		public static IniDictionary Serialize(object Object)
@@ -31,10 +31,10 @@ namespace IniFile
 			return Serialize(Object, initialCollectionSettings);
 		}
 
-		public static IniDictionary Serialize(object Object, IniCollectionSettings CollectionSettings)
+		public static IniDictionary Serialize(object Object, IniCollectionSettings collectionSettings)
 		{
 			IniDictionary ini = new IniDictionary() { { string.Empty, new IniGroup() } };
-			SerializeInternal("value", Object, ini, string.Empty, true, CollectionSettings);
+			SerializeInternal("value", Object, ini, string.Empty, true, collectionSettings);
 			return ini;
 		}
 
@@ -130,7 +130,7 @@ namespace IniFile
 				DefaultValueAttribute defattr = (DefaultValueAttribute)Attribute.GetCustomAttribute(member, typeof(DefaultValueAttribute), true);
 				if (defattr != null)
 					defval = defattr.Value;
-				if (Attribute.GetCustomAttribute(member, typeof(IniAlwaysIncludeAttribute), true) != null || !object.Equals(item, defval))
+				if (Attribute.GetCustomAttribute(member, typeof(IniAlwaysIncludeAttribute), true) != null || !Equals(item, defval))
 				{
 					IniCollectionSettings settings = defaultCollectionSettings;
 					IniCollectionAttribute attr = (IniCollectionAttribute)Attribute.GetCustomAttribute(member, typeof(IniCollectionAttribute));
@@ -146,9 +146,9 @@ namespace IniFile
 			return Deserialize<T>(IniFile.Load(filename));
 		}
 
-		public static object Deserialize(Type Type, string Filename)
+		public static object Deserialize(Type Type, string filename)
 		{
-			return Deserialize(Type, IniFile.Load(Filename));
+			return Deserialize(Type, IniFile.Load(filename));
 		}
 
 		public static T Deserialize<T>(IniDictionary INI)
@@ -156,9 +156,9 @@ namespace IniFile
 			return (T)Deserialize(typeof(T), INI);
 		}
 
-		public static object Deserialize(Type Type, IniDictionary INI)
+		public static object Deserialize(Type Type, IniDictionary ini)
 		{
-			return Deserialize(Type, INI, initialCollectionSettings);
+			return Deserialize(Type, ini, initialCollectionSettings);
 		}
 
 		public static T Deserialize<T>(string filename, IniCollectionSettings CollectionSettings)
@@ -166,22 +166,22 @@ namespace IniFile
 			return Deserialize<T>(IniFile.Load(filename), CollectionSettings);
 		}
 
-		public static object Deserialize(Type Type, string Filename, IniCollectionSettings CollectionSettings)
+		public static object Deserialize(Type Type, string filename, IniCollectionSettings collectionSettings)
 		{
-			return Deserialize(Type, IniFile.Load(Filename), CollectionSettings);
+			return Deserialize(Type, IniFile.Load(filename), collectionSettings);
 		}
 
-		public static T Deserialize<T>(IniDictionary INI, IniCollectionSettings CollectionSettings)
+		public static T Deserialize<T>(IniDictionary INI, IniCollectionSettings collectionSettings)
 		{
-			return (T)Deserialize(typeof(T), INI, CollectionSettings);
+			return (T)Deserialize(typeof(T), INI, collectionSettings);
 		}
 
-		public static object Deserialize(Type Type, IniDictionary INI, IniCollectionSettings CollectionSettings)
+		public static object Deserialize(Type Type, IniDictionary ini, IniCollectionSettings collectionSettings)
 		{
 			object Object;
-			IniDictionary ini = new IniDictionary();
-			ini = IniFile.Combine(ini, INI);
-			Object = DeserializeInternal("value", Type, Type.GetDefaultValue(), ini, string.Empty, true, CollectionSettings);
+			IniDictionary dict = new IniDictionary();
+			dict = IniFile.Combine(dict, ini);
+			Object = DeserializeInternal("value", Type, Type.GetDefaultValue(), dict, string.Empty, true, collectionSettings);
 			return Object;
 		}
 
@@ -218,7 +218,7 @@ namespace IniFile
 					{
 						case IniCollectionMode.Normal:
 							foreach (IniNameValue item in group)
-								if (item.Key.StartsWith(name + "["))
+								if (item.Key.StartsWith(name + "[", StringComparison.Ordinal))
 								{
 									int key = int.Parse(item.Key.Substring(name.Length + 1, item.Key.Length - (name.Length + 2)));
 									maxind = Math.Max(key, maxind);
@@ -234,7 +234,7 @@ namespace IniFile
 							break;
 						case IniCollectionMode.NoSquareBrackets:
 							foreach (IniNameValue item in group)
-								if (item.Key.StartsWith(name))
+								if (item.Key.StartsWith(name, StringComparison.Ordinal))
 								{
 									int key;
 									if (int.TryParse(item.Key.Substring(name.Length), out key))
@@ -256,7 +256,7 @@ namespace IniFile
 					{
 						case IniCollectionMode.Normal:
 							foreach (IniNameGroup item in ini)
-								if (item.Key.StartsWith(fullname + "["))
+								if (item.Key.StartsWith(fullname + "[", StringComparison.Ordinal))
 								{
 									int key = int.Parse(item.Key.Substring(fullname.Length + 1, item.Key.Length - (fullname.Length + 2)));
 									maxind = Math.Max(key, maxind);
@@ -272,7 +272,7 @@ namespace IniFile
 							break;
 						case IniCollectionMode.NoSquareBrackets:
 							foreach (IniNameGroup item in ini)
-								if (item.Key.StartsWith(fullname))
+								if (item.Key.StartsWith(fullname, StringComparison.Ordinal))
 								{
 									int key = int.Parse(item.Key.Substring(fullname.Length));
 									maxind = Math.Max(key, maxind);
@@ -476,10 +476,10 @@ namespace IniFile
 			{
 				case TypeCode.Object:
 					TypeConverter converter = TypeDescriptor.GetConverter(type);
-					if (converter != null && !(converter is ComponentConverter) && converter.GetType() != typeof(TypeConverter))
+					if (!(converter is ComponentConverter) && converter.GetType() != typeof(TypeConverter))
 						if (converter.CanConvertTo(typeof(string)) & converter.CanConvertFrom(typeof(string)))
 							return false;
-					if (type.GetType() == typeof(Type))
+					if (type == typeof(Type))
 						return false;
 					return true;
 				default:
@@ -492,18 +492,16 @@ namespace IniFile
 			if (@object is string) return (string)@object;
 			if (@object is Enum) return @object.ToString();
 			TypeConverter converter = TypeDescriptor.GetConverter(@object);
-			if (converter != null && !(converter is ComponentConverter) && converter.GetType() != typeof(TypeConverter))
+			if (!(converter is ComponentConverter) && converter.GetType() != typeof(TypeConverter))
 				if (converter.CanConvertTo(typeof(string)))
 					return converter.ConvertToInvariantString(@object);
-			if (@object is Type)
-				return ((Type)@object).AssemblyQualifiedName;
-			return null;
+			return (@object as Type)?.AssemblyQualifiedName;
 		}
 
 		private static object ConvertFromString(this Type type, string value)
 		{
 			TypeConverter converter = TypeDescriptor.GetConverter(type);
-			if (converter != null && !(converter is ComponentConverter) && converter.GetType() != typeof(TypeConverter))
+			if (!(converter is ComponentConverter) && converter.GetType() != typeof(TypeConverter))
 				if (converter.CanConvertFrom(typeof(string)))
 					return converter.ConvertFromInvariantString(value);
 			if (type == typeof(Type))
@@ -560,7 +558,7 @@ namespace IniFile
 					{
 						case IniCollectionMode.Normal:
 							foreach (IniNameValue item in group)
-								if (item.Key.StartsWith(name + "["))
+								if (item.Key.StartsWith(name + "[", StringComparison.Ordinal))
 								{
 									int key = int.Parse(item.Key.Substring(name.Length + 1, item.Key.Length - (name.Length + 2)));
 									maxind = Math.Max(key, maxind);
@@ -576,7 +574,7 @@ namespace IniFile
 							break;
 						case IniCollectionMode.NoSquareBrackets:
 							foreach (IniNameValue item in group)
-								if (item.Key.StartsWith(name))
+								if (item.Key.StartsWith(name, StringComparison.Ordinal))
 								{
 									int key;
 									if (int.TryParse(item.Key.Substring(name.Length), out key))
@@ -597,7 +595,7 @@ namespace IniFile
 					{
 						case IniCollectionMode.Normal:
 							foreach (IniNameGroup item in ini)
-								if (item.Key.StartsWith(fullname + "["))
+								if (item.Key.StartsWith(fullname + "[", StringComparison.Ordinal))
 								{
 									int key = int.Parse(item.Key.Substring(fullname.Length + 1, item.Key.Length - (fullname.Length + 2)));
 									maxind = Math.Max(key, maxind);
@@ -613,7 +611,7 @@ namespace IniFile
 							break;
 						case IniCollectionMode.NoSquareBrackets:
 							foreach (IniNameGroup item in ini)
-								if (item.Key.StartsWith(fullname))
+								if (item.Key.StartsWith(fullname, StringComparison.Ordinal))
 								{
 									int key = int.Parse(item.Key.Substring(fullname.Length));
 									maxind = Math.Max(key, maxind);
@@ -692,7 +690,7 @@ namespace IniFile
 					{
 						case IniCollectionMode.Normal:
 							foreach (IniNameValue item in group)
-								if (item.Key.StartsWith(name + "["))
+								if (item.Key.StartsWith(name + "[", StringComparison.Ordinal))
 									items.Add(item.Key.Substring(name.Length + 1, item.Key.Length - (name.Length + 2)));
 							break;
 						case IniCollectionMode.IndexOnly:
@@ -701,7 +699,7 @@ namespace IniFile
 							break;
 						case IniCollectionMode.NoSquareBrackets:
 							foreach (IniNameValue item in group)
-								if (item.Key.StartsWith(name))
+								if (item.Key.StartsWith(name, StringComparison.Ordinal))
 									items.Add(item.Key.Substring(name.Length));
 							break;
 						case IniCollectionMode.SingleLine:
@@ -739,7 +737,7 @@ namespace IniFile
 					{
 						case IniCollectionMode.Normal:
 							foreach (IniNameGroup item in ini)
-								if (item.Key.StartsWith(name + "["))
+								if (item.Key.StartsWith(name + "[", StringComparison.Ordinal))
 									items.Add(item.Key.Substring(name.Length + 1, item.Key.Length - (name.Length + 2)));
 							break;
 						case IniCollectionMode.IndexOnly:
@@ -749,7 +747,7 @@ namespace IniFile
 							break;
 						case IniCollectionMode.NoSquareBrackets:
 							foreach (IniNameGroup item in ini)
-								if (item.Key.StartsWith(name))
+								if (item.Key.StartsWith(name, StringComparison.Ordinal))
 									items.Add(item.Key.Substring(name.Length));
 							break;
 						case IniCollectionMode.SingleLine:
@@ -822,14 +820,14 @@ namespace IniFile
 
 		public string Format
 		{
-			get { return Settings.Format; }
-			set { Settings.Format = value; }
+			get => Settings.Format;
+			set => Settings.Format = value;
 		}
 
 		public int StartIndex
 		{
-			get { return Settings.StartIndex; }
-			set { Settings.StartIndex = value; }
+			get => Settings.StartIndex;
+			set => Settings.StartIndex = value;
 		}
 
 		public IniCollectionSettings Settings { get; private set; }

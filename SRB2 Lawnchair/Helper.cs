@@ -12,8 +12,7 @@ namespace Lawnchair
 		v21x,
 		v20x,
 		v109x,
-		v108x,
-		count
+		v108x
 	}
 
 	internal static class Helper
@@ -40,22 +39,34 @@ namespace Lawnchair
 				char y = text[1];
 
 				if (char.IsLetter(x))
+				{
 					p = LetterPosition(x);
+				}
 				else if (char.IsNumber(x))
+				{
 					p = (short)char.GetNumericValue(x);
+				}
 
 				if (char.IsLetter(y))
+				{
 					q += LetterPosition(y);
+				}
 				else if (char.IsNumber(y))
+				{
 					q = (short)char.GetNumericValue(y);
+				}
 
 				if (!char.IsLetter(x) && !char.IsLetter(y))
+				{
 					return Convert.ToInt16(text);
+				}
 
 				result = ((36 * p + q) + 100);
 			}
 			else if (text.Length == 1 && char.IsNumber(text[0]) && Convert.ToInt32(text) < 10)
+			{
 				result = Convert.ToInt32(text);
+			}
 
 			return result;
 		}
@@ -66,9 +77,9 @@ namespace Lawnchair
 
 			if (num > 99)
 			{
-				short x = (short)(num - 100);
-				short p = (short)(x / 36);
-				short q = (short)(x - (36 * p));
+				short  x = (short)(num - 100);
+				short  p = (short)(x / 36);
+				short  q = (short)(x - (36 * p));
 				string a = IntToLetter(p).ToString();
 				string b = q < 10 ? q.ToString() : IntToLetter((q - 10)).ToString();
 
@@ -77,15 +88,19 @@ namespace Lawnchair
 			else
 			{
 				if (num < 10)
+				{
 					result = "0" + num;
+				}
 				else
+				{
 					result = num.ToString();
+				}
 			}
 
 			return result;
 		}
 
-		public static bool checkMapNum(string mapNum)
+		public static bool CheckMapNum(string mapNum)
 		{
 			bool result = false;
 
@@ -93,7 +108,7 @@ namespace Lawnchair
 			{
 				case 0:
 					MessageBox.Show("You didn't specify a map number!", "Map number error",
-						MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 					result = true;
 					break;
 
@@ -103,45 +118,48 @@ namespace Lawnchair
 						if (Convert.ToInt32(mapNum) < 1)
 						{
 							MessageBox.Show("The map number you specified is invalid; the map number cannot be less than 1.",
-								"Map number error",
-								MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+							                "Map number error",
+							                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 							result = true;
 						}
 					}
+
 					if (char.IsLetter(mapNum[0]))
 					{
 						MessageBox.Show("The map number you specified was less than two characters and is not a number.",
-							"Map number error",
-							MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						                "Map number error",
+						                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 						result = true;
 					}
+
 					break;
 
 				case 2:
 					if (!char.IsLetter(mapNum[0]) && char.IsLetter(mapNum[1]))
 					{
 						MessageBox.Show("Map numbers that begin with a number may only end with numbers.",
-							"Map number error",
-							MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						                "Map number error",
+						                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 						result = true;
 					}
+
 					break;
 
 				default:
 					if (mapNum.Length >= 3)
 					{
-						int n;
-						bool isNum = int.TryParse(mapNum, out n);
+						bool isNum = int.TryParse(mapNum, out int _);
 
 						if (!isNum)
 						{
 							MessageBox.Show("The map number you specified is longer than 2 characters but is not a number.",
-								"Map number error",
-								MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+							                "Map number error",
+							                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 						}
 
 						result = !isNum;
 					}
+
 					break;
 			}
 
@@ -209,8 +227,10 @@ namespace Lawnchair
 
 			foreach (FileInfo info in dir.GetFiles())
 			{
-				if (isCommonFile(info.Extension, ref list))
+				if (IsCommonFile(info.Extension, ref list))
+				{
 					paths.Add(info.FullName);
+				}
 			}
 
 			foreach (DirectoryInfo info in dir.GetDirectories())
@@ -221,17 +241,17 @@ namespace Lawnchair
 			return paths;
 		}
 
-		public static bool isCommonFile(string fileExtension, ref List<string> list)
+		public static bool IsCommonFile(string fileExtension, ref List<string> list)
 		{
-			return (!DragDropFilter.isFilterEnabled || list.Contains(fileExtension.ToLower()));
+			return (!DragDropFilter.IsFilterEnabled || list.Contains(fileExtension.ToLower()));
 		}
 
 		public static List<string> GetStringLiterals(string str, bool allowEscape = true, char escapeDelim = '\\')
 		{
 			List<string> result = new List<string>();
-			string text = string.Empty;
-			bool quote = false;
-			bool escape = false;
+			string       text   = string.Empty;
+			bool         quote  = false;
+			bool         escape = false;
 
 			foreach (char c in str)
 			{
@@ -242,6 +262,7 @@ namespace Lawnchair
 						escape = true;
 						continue;
 					}
+
 					if (c == '"')
 					{
 						quote = !quote;
@@ -263,7 +284,9 @@ namespace Lawnchair
 			}
 
 			if (!string.IsNullOrEmpty(text))
+			{
 				result.Add(text);
+			}
 
 			return result;
 		}
@@ -280,52 +303,37 @@ namespace Lawnchair
 
 			if (version == SRB2Version.v21x)
 			{
-				combo.Items.AddRange(
-					new object[]
-					{
-						"Co-op",
-						"Competition",
-						"Race",
-						"Match",
-						"Team Match",
-						"Tag",
-						"Hide and Seek",
-						"Capture the Flag"
-					}
-					);
+				combo.Items.AddRange(new object[]
+				                     {
+				                     	"Co-op",
+				                     	"Competition",
+				                     	"Race",
+				                     	"Match",
+				                     	"Team Match",
+				                     	"Tag",
+				                     	"Hide and Seek",
+				                     	"Capture the Flag"
+				                     });
 			}
 			else
 			{
-				combo.Items.AddRange(
-					new object[]
-					{
-						"Co-op",
-						"Match",
-						"Race",
-						"Tag",
-						"Capture the Flag"
-						//"Team Match",
-						//"Classic Race",
-						//"Hide and Seek"
-					}
-					);
+				combo.Items.AddRange(new object[]
+				                     {
+				                     	"Co-op",
+				                     	"Match",
+				                     	"Race",
+				                     	"Tag",
+				                     	"Capture the Flag"
+				                     });
 			}
 
 			combo.SelectedIndex = 0;
 			combo.EndUpdate();
 		}
 
-		public static void textAutoSelectText(TextBoxBase sender)
+		public static void TextAutoSelectText(TextBoxBase sender)
 		{
 			sender.SelectAll();
 		}
-
-		/*
-		public static int VersionToIndex(SRB2Version version)
-		{
-			int result = (int)version;
-			return ((int)SRB2Version.count - 1) - result;
-		}
-		*/
 	}
 }

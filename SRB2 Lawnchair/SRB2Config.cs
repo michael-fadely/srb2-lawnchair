@@ -9,14 +9,17 @@ namespace Lawnchair
 	class SRB2Config
 	{
 		private readonly Dictionary<string, List<List<string>>> configFile;
+
 		/// <summary>
 		/// Gets the path to the current configuration file.
 		/// </summary>
 		public string FilePath { get; private set; }
+
 		/// <summary>
 		/// Gets a value indicating whether the file has pending modifications.
 		/// </summary>
 		public bool Modified { get; private set; }
+
 		/// <summary>
 		/// Gets a value indicating whether or not the file has been successfully loaded.
 		/// </summary>
@@ -42,15 +45,17 @@ namespace Lawnchair
 			configFile = new Dictionary<string, List<List<string>>>();
 		}
 
-		private bool hasKey(string key)
+		private bool ContainsKey(string key)
 		{
 			return configFile.ContainsKey(key);
 		}
 
-		private void initKey(string key)
+		private void InitKey(string key)
 		{
-			if (!hasKey(key))
+			if (!ContainsKey(key))
+			{
 				configFile[key] = new List<List<string>>();
+			}
 		}
 
 		/// <summary>
@@ -63,6 +68,7 @@ namespace Lawnchair
 			FilePath = filePath;
 			return Load();
 		}
+
 		// TODO: Validate the file by looking for "// SRB2 configuration file."
 		/// <summary>
 		/// Loads the last configuration, overwriting all stored settings.
@@ -73,35 +79,38 @@ namespace Lawnchair
 			configFile.Clear();
 
 			if (!File.Exists(FilePath))
+			{
 				return Loaded = false;
+			}
 
 			// TODO: Text stream
 			string[] configLines = File.ReadAllLines(FilePath);
 
 			foreach (string s in configLines)
 			{
-				if (s.StartsWith("//"))
+				if (s.StartsWith("//", StringComparison.Ordinal))
 				{
 					configFile[s] = null;
+					continue;
 				}
-				else
+
+				int i = s.IndexOf(' ');
+
+				if (i < 1)
 				{
-					int i = s.IndexOf(' ');
-
-					if (i < 1)
-					{
-						configFile[s] = null;
-						continue;
-					}
-
-					string key = s.Substring(0, i).Trim();
-					string values = s.Substring(i + 1).Trim();
-
-					if (!configFile.ContainsKey(key))
-						configFile[key] = new List<List<string>>();
-
-					configFile[key].Add(new List<string>(Helper.GetStringLiterals(values)));
+					configFile[s] = null;
+					continue;
 				}
+
+				string key    = s.Substring(0, i).Trim();
+				string values = s.Substring(i + 1).Trim();
+
+				if (!configFile.ContainsKey(key))
+				{
+					configFile[key] = new List<List<string>>();
+				}
+
+				configFile[key].Add(new List<string>(Helper.GetStringLiterals(values)));
 			}
 
 			return Loaded = true;
@@ -117,6 +126,7 @@ namespace Lawnchair
 			FilePath = filePath;
 			return SaveChanged();
 		}
+
 		/// <summary>
 		/// Saves the configuration file only if there have been modifications.
 		/// </summary>
@@ -124,7 +134,9 @@ namespace Lawnchair
 		public bool SaveChanged()
 		{
 			if (Modified)
+			{
 				Save();
+			}
 
 			return Modified;
 		}
@@ -147,21 +159,22 @@ namespace Lawnchair
 
 			foreach (KeyValuePair<string, List<List<string>>> entry in configFile)
 			{
-				if (entry.Value != null)
-				{
-					foreach (List<string> l in entry.Value)
-					{
-						f.Write(entry.Key);
-
-						foreach (string s in l)
-							f.Write(" \"{0}\"", s);
-
-						f.WriteLine();
-					}
-				}
-				else
+				if (entry.Value == null)
 				{
 					f.WriteLine(entry.Key);
+					continue;
+				}
+
+				foreach (List<string> l in entry.Value)
+				{
+					f.Write(entry.Key);
+
+					foreach (string s in l)
+					{
+						f.Write(" \"{0}\"", s);
+					}
+
+					f.WriteLine();
 				}
 			}
 
@@ -177,31 +190,39 @@ namespace Lawnchair
 
 		public List<string> Get(string key, int instance = 0)
 		{
-			if (!hasKey(key))
+			if (!ContainsKey(key))
+			{
 				return null;
+			}
 
 			List<List<string>> entry = configFile[key];
 
 			if (entry == null)
+			{
 				return null;
+			}
+
 			if (instance >= entry.Count)
+			{
 				throw new IndexOutOfRangeException("You done goofed.");
+			}
 
 			return entry[instance];
 		}
 
 		public List<List<string>> GetList(string key)
 		{
-			return hasKey(key) ? configFile[key] : null;
+			return ContainsKey(key) ? configFile[key] : null;
 		}
 
 		public void Add(string key, string value, int instance = 0)
 		{
 			AddList(key, new List<string> { value }, instance);
 		}
+
 		public void AddList(string key, List<string> value, int instance = 0)
 		{
-			initKey(key);
+			InitKey(key);
 			configFile[key].Add(value);
 			Modified = true;
 		}
@@ -210,16 +231,23 @@ namespace Lawnchair
 		{
 			SetList(key, new List<string> { value }, instance);
 		}
+
 		public void SetList(string key, List<string> value, int instance = 0)
 		{
-			if (!hasKey(key))
+			if (!ContainsKey(key))
+			{
 				configFile[key] = new List<List<string>>();
+			}
 
 			if (configFile[key].Count == 0)
+			{
 				configFile[key].Add(new List<string>());
+			}
 
 			if (instance >= configFile[key].Count)
+			{
 				throw new IndexOutOfRangeException("You done goofed.");
+			}
 
 			configFile[key][instance] = new List<string>(value);
 			Modified = true;

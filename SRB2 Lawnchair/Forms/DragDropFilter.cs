@@ -6,10 +6,10 @@ namespace Lawnchair.Forms
 {
 	public partial class DragDropFilter : Form
 	{
-		public static bool isFilterEnabled;
+		public static bool IsFilterEnabled;
 
 		private NewDragDropFilter NewFilter;
-		public LawnchairSettings Settings { get; private set; }
+		public  LawnchairSettings Settings { get; private set; }
 
 		public DragDropFilter(LawnchairSettings settings)
 		{
@@ -17,7 +17,9 @@ namespace Lawnchair.Forms
 
 			// Check all the default items in the default filter list
 			for (int i = 0; i < DragDropDefaultFilters.Items.Count; i++)
+			{
 				DragDropDefaultFilters.SetItemCheckState(i, CheckState.Checked);
+			}
 
 			Settings = settings;
 
@@ -27,7 +29,7 @@ namespace Lawnchair.Forms
 		private void SaveFilters()
 		{
 			Settings.Filters.Enabled = radioEnableDropFilter.Checked;
-			isFilterEnabled = radioEnableDropFilter.Checked;
+			IsFilterEnabled          = radioEnableDropFilter.Checked;
 
 			Settings.Filters.AllowWAD = DragDropDefaultFilters.GetItemChecked(0);
 			Settings.Filters.AllowSOC = DragDropDefaultFilters.GetItemChecked(1);
@@ -42,15 +44,15 @@ namespace Lawnchair.Forms
 			for (int i = 0; i < DragDropCustomFilters.Items.Count; i++)
 			{
 				Settings.Filters.CustomFilters.Add(DragDropCustomFilters.Items[i].ToString(),
-					DragDropCustomFilters.GetItemChecked(i));
+				                                   DragDropCustomFilters.GetItemChecked(i));
 			}
 		}
 
 		private void LoadFilters()
 		{
-			radioEnableDropFilter.Checked = Settings.Filters.Enabled;
+			radioEnableDropFilter.Checked  = Settings.Filters.Enabled;
 			radioDisableDropFilter.Checked = !radioEnableDropFilter.Checked;
-			isFilterEnabled = radioEnableDropFilter.Checked;
+			IsFilterEnabled                = radioEnableDropFilter.Checked;
 
 			DragDropDefaultFilters.SetItemCheckState(0, Helper.BoolToCheckState(Settings.Filters.AllowWAD));
 			DragDropDefaultFilters.SetItemCheckState(1, Helper.BoolToCheckState(Settings.Filters.AllowSOC));
@@ -61,7 +63,9 @@ namespace Lawnchair.Forms
 			DragDropDefaultFilters.SetItemCheckState(6, Helper.BoolToCheckState(Settings.Filters.AllowWPN));
 
 			foreach (KeyValuePair<string, bool> d in Settings.Filters.CustomFilters)
+			{
 				DragDropCustomFilters.Items.Add(d.Key, d.Value);
+			}
 		}
 
 		#region Event Handlers
@@ -76,7 +80,7 @@ namespace Lawnchair.Forms
 		private void radioEnableDropFilter_CheckedChanged(object sender, EventArgs e)
 		{
 			groupDefaultFileExtensions.Enabled = radioEnableDropFilter.Checked;
-			groupCustomFileExtensions.Enabled = radioEnableDropFilter.Checked;
+			groupCustomFileExtensions.Enabled  = radioEnableDropFilter.Checked;
 		}
 
 		private void buttonAddFilter_Click(object sender, EventArgs e)
@@ -86,8 +90,10 @@ namespace Lawnchair.Forms
 
 			if (result == DialogResult.OK)
 			{
-				foreach (string s in NewFilter.extensions)
+				foreach (string s in NewFilter.Extensions)
+				{
 					DragDropCustomFilters.Items.Add(s, true);
+				}
 			}
 
 			DragDropCustomFilters.Select();
@@ -103,7 +109,9 @@ namespace Lawnchair.Forms
 			if (itemCount > 0)
 			{
 				if (selected > itemCount - 1)
+				{
 					selected = itemCount - 1;
+				}
 
 				DragDropCustomFilters.SetSelected(selected, true);
 			}
