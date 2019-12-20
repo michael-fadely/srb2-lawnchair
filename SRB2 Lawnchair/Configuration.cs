@@ -158,7 +158,8 @@ namespace Lawnchair
 	{
 		public FilterSettings()
 		{
-			Enabled = true;
+			Enabled  = true;
+			AllowPK3 = true;
 			AllowWAD = true;
 			AllowSOC = true;
 			AllowLua = true;
@@ -169,6 +170,7 @@ namespace Lawnchair
 		[IniAlwaysInclude]
 		public bool Enabled;
 
+		public bool AllowPK3;
 		public bool AllowWAD;
 		public bool AllowSOC;
 		public bool AllowLua;

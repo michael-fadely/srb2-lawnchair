@@ -80,7 +80,7 @@ namespace Lawnchair.Forms
 			this.groupDefaultFileExtensions.Controls.Add(this.DragDropDefaultFilters);
 			this.groupDefaultFileExtensions.Location = new System.Drawing.Point(12, 58);
 			this.groupDefaultFileExtensions.Name = "groupDefaultFileExtensions";
-			this.groupDefaultFileExtensions.Size = new System.Drawing.Size(284, 141);
+			this.groupDefaultFileExtensions.Size = new System.Drawing.Size(280, 141);
 			this.groupDefaultFileExtensions.TabIndex = 2;
 			this.groupDefaultFileExtensions.TabStop = false;
 			this.groupDefaultFileExtensions.Text = "Default File Extensions";
@@ -92,6 +92,7 @@ namespace Lawnchair.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.DragDropDefaultFilters.FormattingEnabled = true;
 			this.DragDropDefaultFilters.Items.AddRange(new object[] {
+            ".pk3",
             ".wad",
             ".soc",
             ".lua",
@@ -101,14 +102,14 @@ namespace Lawnchair.Forms
             ".wpn"});
 			this.DragDropDefaultFilters.Location = new System.Drawing.Point(6, 19);
 			this.DragDropDefaultFilters.Name = "DragDropDefaultFilters";
-			this.DragDropDefaultFilters.Size = new System.Drawing.Size(272, 109);
+			this.DragDropDefaultFilters.Size = new System.Drawing.Size(268, 109);
 			this.DragDropDefaultFilters.TabIndex = 0;
 			// 
 			// buttonDelFilter
 			// 
 			this.buttonDelFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonDelFilter.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.buttonDelFilter.Location = new System.Drawing.Point(254, 49);
+			this.buttonDelFilter.Location = new System.Drawing.Point(250, 49);
 			this.buttonDelFilter.Name = "buttonDelFilter";
 			this.buttonDelFilter.Size = new System.Drawing.Size(24, 24);
 			this.buttonDelFilter.TabIndex = 2;
@@ -121,7 +122,7 @@ namespace Lawnchair.Forms
 			// 
 			this.buttonAddFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonAddFilter.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.buttonAddFilter.Location = new System.Drawing.Point(254, 19);
+			this.buttonAddFilter.Location = new System.Drawing.Point(250, 19);
 			this.buttonAddFilter.Name = "buttonAddFilter";
 			this.buttonAddFilter.Size = new System.Drawing.Size(24, 24);
 			this.buttonAddFilter.TabIndex = 1;
@@ -138,14 +139,14 @@ namespace Lawnchair.Forms
 			this.DragDropCustomFilters.FormattingEnabled = true;
 			this.DragDropCustomFilters.Location = new System.Drawing.Point(6, 19);
 			this.DragDropCustomFilters.Name = "DragDropCustomFilters";
-			this.DragDropCustomFilters.Size = new System.Drawing.Size(242, 94);
+			this.DragDropCustomFilters.Size = new System.Drawing.Size(238, 94);
 			this.DragDropCustomFilters.TabIndex = 0;
 			// 
 			// buttonOK
 			// 
 			this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonOK.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.buttonOK.Location = new System.Drawing.Point(136, 330);
+			this.buttonOK.Location = new System.Drawing.Point(132, 342);
 			this.buttonOK.Name = "buttonOK";
 			this.buttonOK.Size = new System.Drawing.Size(75, 23);
 			this.buttonOK.TabIndex = 4;
@@ -158,7 +159,7 @@ namespace Lawnchair.Forms
 			this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.buttonCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.buttonCancel.Location = new System.Drawing.Point(221, 330);
+			this.buttonCancel.Location = new System.Drawing.Point(217, 342);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
 			this.buttonCancel.TabIndex = 5;
@@ -175,7 +176,7 @@ namespace Lawnchair.Forms
 			this.groupCustomFileExtensions.Controls.Add(this.buttonDelFilter);
 			this.groupCustomFileExtensions.Location = new System.Drawing.Point(12, 205);
 			this.groupCustomFileExtensions.Name = "groupCustomFileExtensions";
-			this.groupCustomFileExtensions.Size = new System.Drawing.Size(284, 119);
+			this.groupCustomFileExtensions.Size = new System.Drawing.Size(280, 131);
 			this.groupCustomFileExtensions.TabIndex = 3;
 			this.groupCustomFileExtensions.TabStop = false;
 			this.groupCustomFileExtensions.Text = "Custom File Extensions";
@@ -186,7 +187,7 @@ namespace Lawnchair.Forms
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
-			this.ClientSize = new System.Drawing.Size(308, 365);
+			this.ClientSize = new System.Drawing.Size(304, 377);
 			this.Controls.Add(this.groupCustomFileExtensions);
 			this.Controls.Add(this.buttonCancel);
 			this.Controls.Add(this.buttonOK);
@@ -197,7 +198,7 @@ namespace Lawnchair.Forms
 			this.KeyPreview = true;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(320, 377);
+			this.MinimumSize = new System.Drawing.Size(320, 416);
 			this.Name = "DragDropFilter";
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;

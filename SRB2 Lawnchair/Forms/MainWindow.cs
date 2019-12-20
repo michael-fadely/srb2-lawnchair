@@ -131,7 +131,9 @@ namespace Lawnchair.Forms
 			textExecutable.Text      = Settings.Game.Executable;
 
 			if (!string.IsNullOrEmpty(Settings.Game.CommandLine))
+			{
 				textCommandLine.Text = Settings.Game.CommandLine;
+			}
 
 			// Audio
 			checkEnableSFX.Checked = Settings.Game.EnableSFX;
@@ -295,6 +297,7 @@ namespace Lawnchair.Forms
 			if (path.Length > 0)
 			{
 				List<string> files = IniSerializer.Deserialize<List<string>>(path);
+
 				try
 				{
 					foreach (string s in files)
@@ -384,6 +387,11 @@ namespace Lawnchair.Forms
 		private void UpdateFilterList()
 		{
 			filters = new List<string>();
+
+			if (Settings.Filters.AllowPK3)
+			{
+				filters.Add(".pk3");
+			}
 
 			if (Settings.Filters.AllowWAD)
 			{
@@ -615,7 +623,6 @@ namespace Lawnchair.Forms
 			// Finally, launch the game with the generated args
 			try
 			{
-				StartInfo.Arguments = string.Empty;
 				StartInfo.Arguments = string.Join(" ", args);
 
 				Process process = new Process { StartInfo = StartInfo, EnableRaisingEvents = true };
@@ -809,109 +816,50 @@ namespace Lawnchair.Forms
 			listFiles.EndUpdate();
 		}
 
-		private void onTextChanged_textWarpMapNum(object sender, EventArgs e)
+		private static void RestrictTextBoxContent(TextBox textBox, Func<char, bool> predicate)
 		{
-			StringBuilder sb = new StringBuilder(textWarpMapNum.Text.Length);
-			int lastpos = textWarpMapNum.SelectionStart;
+			StringBuilder sb = new StringBuilder(textBox.Text.Length);
+			int lastPosition = textBox.SelectionStart;
 
-			foreach (char c in textWarpMapNum.Text)
+			foreach (char c in textBox.Text)
 			{
-				if ((c >= 'a' & c <= 'z') || (c >= 'A' & c <= 'Z') || (c >= '0' & c <= '9'))
+				if (predicate(c))
 				{
 					sb.Append(c);
 				}
 				else
 				{
-					lastpos--;
+					--lastPosition;
 				}
 			}
 
-			textWarpMapNum.Text = sb.ToString();
-			textWarpMapNum.SelectionStart = (lastpos <= textWarpMapNum.TextLength) ? lastpos : textWarpMapNum.TextLength;
+			textBox.Text = sb.ToString();
+			textBox.SelectionStart = (lastPosition <= textBox.TextLength) ? lastPosition : textBox.TextLength;
+		}
+
+		private void onTextChanged_textWarpMapNum(object sender, EventArgs e)
+		{
+			RestrictTextBoxContent(textWarpMapNum, c => (c >= 'a' & c <= 'z') || (c >= 'A' & c <= 'Z') || (c >= '0' & c <= '9'));
 		}
 
 		private void winWidth_TextChanged(object sender, EventArgs e)
 		{
-			StringBuilder sb = new StringBuilder(textScreenWidth.Text.Length);
-			int lastpos = textScreenWidth.SelectionStart;
-
-			foreach (char c in textScreenWidth.Text)
-			{
-				if (c >= '0' & c <= '9')
-				{
-					sb.Append(c);
-				}
-				else
-				{
-					lastpos--;
-				}
-			}
-
-			textScreenWidth.Text = sb.ToString();
-			textScreenWidth.SelectionStart = (lastpos <= textScreenWidth.TextLength) ? lastpos : textScreenWidth.TextLength;
+			RestrictTextBoxContent(textScreenWidth, c => c >= '0' & c <= '9');
 		}
 
 		private void onTextChanged_textScreenHeight(object sender, EventArgs e)
 		{
-			StringBuilder sb = new StringBuilder(textScreenHeight.Text.Length);
-			int lastpos = textScreenHeight.SelectionStart;
-
-			foreach (char c in textScreenHeight.Text)
-			{
-				if (c >= '0' & c <= '9')
-				{
-					sb.Append(c);
-				}
-				else
-				{
-					lastpos--;
-				}
-			}
-
-			textScreenHeight.Text = sb.ToString();
-			textScreenHeight.SelectionStart = (lastpos <= textScreenHeight.TextLength) ? lastpos : textScreenHeight.TextLength;
+			RestrictTextBoxContent(textScreenHeight, c => c >= '0' & c <= '9');
 		}
 
 		private void onTextChanged_textPortNum(object sender, EventArgs e)
 		{
-			StringBuilder sb = new StringBuilder(textJoinPortNum.Text.Length);
-			int lastpos = textJoinPortNum.SelectionStart;
-
-			foreach (char c in textJoinPortNum.Text)
-			{
-				if (c >= '0' & c <= '9')
-				{
-					sb.Append(c);
-				}
-				else
-				{
-					lastpos--;
-				}
-			}
-
-			textJoinPortNum.Text = sb.ToString();
-			textJoinPortNum.SelectionStart = (lastpos <= textJoinPortNum.TextLength) ? lastpos : textJoinPortNum.TextLength;
+			RestrictTextBoxContent(textJoinPortNum, c => c >= '0' & c <= '9');
 		}
 
 		private void onTextChanged_textHostMapNum(object sender, EventArgs e)
 		{
-			StringBuilder sb = new StringBuilder(textHostMapNum.Text.Length);
-			int lastpos = textHostMapNum.SelectionStart;
-
-			foreach (char c in textHostMapNum.Text)
-			{
-				if ((c >= 'a' & c <= 'z') || (c >= 'A' & c <= 'Z') || (c >= '0' & c <= '9'))
-				{
-					sb.Append(c);
-				}
-				else
-				{
-					lastpos--;
-				}
-			}
-
-			textHostMapNum.Text = sb.ToString();
-			textHostMapNum.SelectionStart = (lastpos <= textHostMapNum.TextLength) ? lastpos : textHostMapNum.TextLength;
+			RestrictTextBoxContent(textHostMapNum, c => (c >= 'a' & c <= 'z') || (c >= 'A' & c <= 'Z') || (c >= '0' & c <= '9'));
 		}
 
 		private void buttonExeBrowse_Click(object sender, EventArgs e)
@@ -1048,6 +996,7 @@ namespace Lawnchair.Forms
 
 			// Re-size the column based on the new content
 			listFiles.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
+
 			// Select the list and end the update
 			listFiles.Select();
 			listFiles.EndUpdate();
@@ -1143,8 +1092,8 @@ namespace Lawnchair.Forms
 					radioHostStandardRoom.Enabled = checkHostOnline.Checked;
 					radioHostCasualRoom.Enabled = checkHostOnline.Checked;
 
-					Helper.GametypeHandler(ref comboWarpGametype, Settings.Launcher.GameVersion);
-					Helper.GametypeHandler(ref comboHostGametype, Settings.Launcher.GameVersion);
+					Helper.GametypeHandler(comboWarpGametype, Settings.Launcher.GameVersion);
+					Helper.GametypeHandler(comboHostGametype, Settings.Launcher.GameVersion);
 					break;
 
 				case SRB2Version.v20x:
@@ -1154,16 +1103,16 @@ namespace Lawnchair.Forms
 						radioHostCasualRoom.Enabled = true;
 					}
 
-					Helper.GametypeHandler(ref comboWarpGametype, Settings.Launcher.GameVersion);
-					Helper.GametypeHandler(ref comboHostGametype, Settings.Launcher.GameVersion);
+					Helper.GametypeHandler(comboWarpGametype, Settings.Launcher.GameVersion);
+					Helper.GametypeHandler(comboHostGametype, Settings.Launcher.GameVersion);
 					break;
 
 				case SRB2Version.v109x:
 					radioHostStandardRoom.Enabled = false;
 					radioHostCasualRoom.Enabled = false;
 
-					Helper.GametypeHandler(ref comboWarpGametype, Settings.Launcher.GameVersion);
-					Helper.GametypeHandler(ref comboHostGametype, Settings.Launcher.GameVersion);
+					Helper.GametypeHandler(comboWarpGametype, Settings.Launcher.GameVersion);
+					Helper.GametypeHandler(comboHostGametype, Settings.Launcher.GameVersion);
 					break;
 
 				case SRB2Version.v108x:

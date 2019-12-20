@@ -9,7 +9,7 @@ namespace Lawnchair.Forms
 		public static bool IsFilterEnabled;
 
 		private NewDragDropFilter NewFilter;
-		public  LawnchairSettings Settings { get; private set; }
+		public  LawnchairSettings Settings { get; }
 
 		public DragDropFilter(LawnchairSettings settings)
 		{
@@ -31,13 +31,16 @@ namespace Lawnchair.Forms
 			Settings.Filters.Enabled = radioEnableDropFilter.Checked;
 			IsFilterEnabled          = radioEnableDropFilter.Checked;
 
-			Settings.Filters.AllowWAD = DragDropDefaultFilters.GetItemChecked(0);
-			Settings.Filters.AllowSOC = DragDropDefaultFilters.GetItemChecked(1);
-			Settings.Filters.AllowLua = DragDropDefaultFilters.GetItemChecked(2);
-			Settings.Filters.AllowSRB = DragDropDefaultFilters.GetItemChecked(3);
-			Settings.Filters.AllowDTA = DragDropDefaultFilters.GetItemChecked(4);
-			Settings.Filters.AllowPLR = DragDropDefaultFilters.GetItemChecked(5);
-			Settings.Filters.AllowWPN = DragDropDefaultFilters.GetItemChecked(6);
+			int n = 0;
+
+			Settings.Filters.AllowPK3 = DragDropDefaultFilters.GetItemChecked(n++);
+			Settings.Filters.AllowWAD = DragDropDefaultFilters.GetItemChecked(n++);
+			Settings.Filters.AllowSOC = DragDropDefaultFilters.GetItemChecked(n++);
+			Settings.Filters.AllowLua = DragDropDefaultFilters.GetItemChecked(n++);
+			Settings.Filters.AllowSRB = DragDropDefaultFilters.GetItemChecked(n++);
+			Settings.Filters.AllowDTA = DragDropDefaultFilters.GetItemChecked(n++);
+			Settings.Filters.AllowPLR = DragDropDefaultFilters.GetItemChecked(n++);
+			Settings.Filters.AllowWPN = DragDropDefaultFilters.GetItemChecked(n);
 
 			Settings.Filters.CustomFilters = new Dictionary<string, bool>();
 
@@ -54,13 +57,16 @@ namespace Lawnchair.Forms
 			radioDisableDropFilter.Checked = !radioEnableDropFilter.Checked;
 			IsFilterEnabled                = radioEnableDropFilter.Checked;
 
-			DragDropDefaultFilters.SetItemCheckState(0, Helper.BoolToCheckState(Settings.Filters.AllowWAD));
-			DragDropDefaultFilters.SetItemCheckState(1, Helper.BoolToCheckState(Settings.Filters.AllowSOC));
-			DragDropDefaultFilters.SetItemCheckState(2, Helper.BoolToCheckState(Settings.Filters.AllowLua));
-			DragDropDefaultFilters.SetItemCheckState(3, Helper.BoolToCheckState(Settings.Filters.AllowSRB));
-			DragDropDefaultFilters.SetItemCheckState(4, Helper.BoolToCheckState(Settings.Filters.AllowDTA));
-			DragDropDefaultFilters.SetItemCheckState(5, Helper.BoolToCheckState(Settings.Filters.AllowPLR));
-			DragDropDefaultFilters.SetItemCheckState(6, Helper.BoolToCheckState(Settings.Filters.AllowWPN));
+			int n = 0;
+
+			DragDropDefaultFilters.SetItemCheckState(n++, Helper.BoolToCheckState(Settings.Filters.AllowPK3));
+			DragDropDefaultFilters.SetItemCheckState(n++, Helper.BoolToCheckState(Settings.Filters.AllowWAD));
+			DragDropDefaultFilters.SetItemCheckState(n++, Helper.BoolToCheckState(Settings.Filters.AllowSOC));
+			DragDropDefaultFilters.SetItemCheckState(n++, Helper.BoolToCheckState(Settings.Filters.AllowLua));
+			DragDropDefaultFilters.SetItemCheckState(n++, Helper.BoolToCheckState(Settings.Filters.AllowSRB));
+			DragDropDefaultFilters.SetItemCheckState(n++, Helper.BoolToCheckState(Settings.Filters.AllowDTA));
+			DragDropDefaultFilters.SetItemCheckState(n++, Helper.BoolToCheckState(Settings.Filters.AllowPLR));
+			DragDropDefaultFilters.SetItemCheckState(n,   Helper.BoolToCheckState(Settings.Filters.AllowWPN));
 
 			foreach (KeyValuePair<string, bool> d in Settings.Filters.CustomFilters)
 			{
@@ -106,15 +112,17 @@ namespace Lawnchair.Forms
 			DragDropCustomFilters.Items.Remove(DragDropCustomFilters.SelectedItem);
 			int itemCount = DragDropCustomFilters.Items.Count;
 
-			if (itemCount > 0)
+			if (itemCount < 1)
 			{
-				if (selected > itemCount - 1)
-				{
-					selected = itemCount - 1;
-				}
-
-				DragDropCustomFilters.SetSelected(selected, true);
+				return;
 			}
+
+			if (selected > itemCount - 1)
+			{
+				selected = itemCount - 1;
+			}
+
+			DragDropCustomFilters.SetSelected(selected, true);
 		}
 
 		#endregion

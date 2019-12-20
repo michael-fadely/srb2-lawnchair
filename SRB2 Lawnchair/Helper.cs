@@ -246,7 +246,7 @@ namespace Lawnchair
 			return (!DragDropFilter.IsFilterEnabled || list.Contains(fileExtension.ToLower()));
 		}
 
-		public static List<string> GetStringLiterals(string str, bool allowEscape = true, char escapeDelim = '\\')
+		public static List<string> Tokenize(string str, bool allowEscape = true, char escapeDelim = '\\')
 		{
 			List<string> result = new List<string>();
 			string       text   = string.Empty;
@@ -296,7 +296,7 @@ namespace Lawnchair
 			return (value) ? CheckState.Checked : CheckState.Unchecked;
 		}
 
-		public static void GametypeHandler(ref ComboBox combo, SRB2Version version)
+		public static void GametypeHandler(ComboBox combo, SRB2Version version)
 		{
 			combo.BeginUpdate();
 			combo.Items.Clear();

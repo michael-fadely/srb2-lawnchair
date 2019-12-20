@@ -124,7 +124,7 @@
     <value>407, 17</value>
   </metadata>
   <data name="addFileDialog.Filter" xml:space="preserve">
-    <value>Common files|*.wad; *.soc; *.lua|WAD files|*.wad|SOC files|*.soc|Lua files|*.lua|SRB files|*.srb|DTA files|*.dta|PLR files|*.plr|WPN files|*.wpn|All supported files|*.wad; *.soc; *.lua; *.srb; *.dta; *.plr; *.wpn|All files|*.*</value>
+    <value>Common files|*.pk3; *.wad; *.soc; *.lua|WAD files|*.wad|SOC files|*.soc|Lua files|*.lua|SRB files|*.srb|DTA files|*.dta|PLR files|*.plr|WPN files|*.wpn|All supported files|*.pk3; *.wad; *.soc; *.lua; *.srb; *.dta; *.plr; *.wpn|All files|*.*</value>
   </data>
   <metadata name="openExeDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>533, 17</value>

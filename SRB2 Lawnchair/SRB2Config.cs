@@ -110,7 +110,7 @@ namespace Lawnchair
 					configFile[key] = new List<List<string>>();
 				}
 
-				configFile[key].Add(new List<string>(Helper.GetStringLiterals(values)));
+				configFile[key].Add(new List<string>(Helper.Tokenize(values)));
 			}
 
 			return Loaded = true;
